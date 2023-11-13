@@ -177,6 +177,7 @@ export default class TwoUp extends HTMLElement {
   }
 
   private _setPosition() {
+    console.log("set position", this._position);
     this.style.setProperty("--split-point", `${this._position}px`);
   }
 }

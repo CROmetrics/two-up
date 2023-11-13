@@ -180,6 +180,7 @@ class TwoUp extends HTMLElement {
         this._setPosition();
     }
     _setPosition() {
+        console.log("set position", this._position);
         this.style.setProperty("--split-point", `${this._position}px`);
     }
 }
