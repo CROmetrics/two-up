@@ -235,7 +235,7 @@ var TwoUp = (function () {
             /**
              * The position of the split in %.
              */
-            this._relativePosition = this.initialposition;
+            this._relativePosition = 0;
             /**
              * The value of _position when the pointer went down.
              */
@@ -285,7 +285,12 @@ var TwoUp = (function () {
             }
         }
         attributeChangedCallback(name) {
-            if (name === orientationAttr || name === initialPositionAttr) {
+            if (name === orientationAttr) {
+                console.log("attribute changed", name);
+                this._resetPosition();
+            }
+            if (name === initialPositionAttr) {
+                console.log("attribute changed", name);
                 this._resetPosition();
             }
         }
@@ -297,11 +302,7 @@ var TwoUp = (function () {
                 this._position = bounds[dimensionAxis] * this._relativePosition;
                 console.log("reset position", this._position);
                 console.log("reset position relative position", this._relativePosition);
-                console.assert(this._relativePosition === this.initialposition, "%o", {
-                    error: "initial position is not equal to relative position",
-                    value: this._relativePosition,
-                    initialposition: this.initialposition,
-                });
+                console.log("relative position === initial position", this._relativePosition === this.initialposition);
                 this._setPosition();
             });
         }
@@ -337,14 +338,16 @@ var TwoUp = (function () {
         get initialposition() {
             const value = this.getAttribute(initialPositionAttr);
             console.log("initial position value", value);
-            if (value === null || typeof value === "undefined")
+            if (value === null || typeof value === "undefined") {
+                console.log("initial position value is null or undefined", value);
                 return 0.5;
+            }
             const perc = parseFloat(value);
-            if (perc === 0)
-                return 0;
+            console.log("initial position perc", perc);
             return perc;
         }
         set initialposition(val) {
+            console.log("set initial position", val);
             this.setAttribute(initialPositionAttr, val.toString());
         }
         /**
