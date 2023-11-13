@@ -89,7 +89,7 @@ class TwoUp extends HTMLElement {
         });
     }
     static get observedAttributes() {
-        return [orientationAttr];
+        return [orientationAttr, initialPositionAttr];
     }
     connectedCallback() {
         this._childrenChange();

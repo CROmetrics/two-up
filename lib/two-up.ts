@@ -13,7 +13,7 @@ type TwoUpOrientation = "horizontal" | "vertical";
  */
 export default class TwoUp extends HTMLElement {
   static get observedAttributes() {
-    return [orientationAttr];
+    return [orientationAttr, initialPositionAttr];
   }
 
   private readonly _handle = document.createElement("div");
