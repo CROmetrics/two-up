@@ -1,4 +1,4 @@
-declare type TwoUpOrientation = 'horizontal' | 'vertical';
+declare type TwoUpOrientation = "horizontal" | "vertical";
 /**
  * A split view that the user can adjust. The first child becomes
  * the left-hand side, and the second child becomes the right-hand side.
@@ -35,6 +35,7 @@ export default class TwoUp extends HTMLElement {
      * Split vertically rather than horizontally.
      */
     orientation: TwoUpOrientation;
+    handleStart: number;
     /**
      * Called when element's child list changes
      */

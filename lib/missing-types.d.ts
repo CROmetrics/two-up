@@ -15,5 +15,7 @@ interface ResizeObserver {
 
 declare var ResizeObserver: {
   prototype: ResizeObserver;
-  new(callback: ResizeObserverCallback): ResizeObserver;
+  new (callback: ResizeObserverCallback): ResizeObserver;
 };
+
+declare module "*.css";

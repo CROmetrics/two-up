@@ -1,19 +1,22 @@
-import PointerTracker, { Pointer } from 'pointer-tracker';
-import * as styles from './styles.css';
+import PointerTracker, { Pointer } from "pointer-tracker";
+import * as styles from "./styles.css";
 
-const legacyClipCompatAttr = 'legacy-clip-compat';
-const orientationAttr = 'orientation';
+const legacyClipCompatAttr = "legacy-clip-compat";
+const orientationAttr = "orientation";
+const handleStart = "handle-start-percent";
 
-type TwoUpOrientation = 'horizontal' | 'vertical';
+type TwoUpOrientation = "horizontal" | "vertical";
 
 /**
  * A split view that the user can adjust. The first child becomes
  * the left-hand side, and the second child becomes the right-hand side.
  */
 export default class TwoUp extends HTMLElement {
-  static get observedAttributes() { return [orientationAttr]; }
+  static get observedAttributes() {
+    return [orientationAttr, handleStart];
+  }
 
-  private readonly _handle = document.createElement('div');
+  private readonly _handle = document.createElement("div");
   /**
    * The position of the split in pixels.
    */
@@ -31,22 +34,20 @@ export default class TwoUp extends HTMLElement {
    */
   private _everConnected = false;
 
-  constructor () {
+  constructor() {
     super();
     this._handle.className = styles.twoUpHandle;
 
     // Watch for children changes.
     // Note this won't fire for initial contents,
     // so _childrenChange is also called in connectedCallback.
-    new MutationObserver(() => this._childrenChange())
-      .observe(this, { childList: true });
+    new MutationObserver(() => this._childrenChange()).observe(this, {
+      childList: true,
+    });
 
     // Watch for element size changes.
-    if ('ResizeObserver' in window) {
-      new ResizeObserver(() => this._resetPosition())
-        .observe(this);
-    } else {
-      window.addEventListener('resize', () => this._resetPosition());
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(() => this._resetPosition()).observe(this);
     }
 
     // Watch for pointers on the handle.
@@ -61,7 +62,7 @@ export default class TwoUp extends HTMLElement {
       move: () => {
         this._pointerChange(
           pointerTracker.startPointers[0],
-          pointerTracker.currentPointers[0],
+          pointerTracker.currentPointers[0]
         );
       },
     });
@@ -70,30 +71,35 @@ export default class TwoUp extends HTMLElement {
   connectedCallback() {
     this._childrenChange();
 
-    this._handle.innerHTML = `<div class="${styles.scrubber}">${
-      `<svg viewBox="0 0 27 20" fill="currentColor">${
-        '<path d="M17 19.2l9.5-9.6L16.9 0zM9.6 0L0 9.6l9.6 9.6z"/>'
-      }</svg>`
-    }</div>`;
+    this._handle.innerHTML = `<div class="${
+      styles.scrubber
+    }">${`<svg viewBox="0 0 27 20" fill="currentColor">${'<path d="M17 19.2l9.5-9.6L16.9 0zM9.6 0L0 9.6l9.6 9.6z"/>'}</svg>`}</div>`;
 
     if (!this._everConnected) {
-      this._resetPosition();
+      this._resetPosition(true);
       this._everConnected = true;
     }
   }
 
   attributeChangedCallback(name: string) {
-    if (name === orientationAttr) {
+    if (name === orientationAttr || name === handleStart) {
       this._resetPosition();
     }
   }
 
-  private _resetPosition() {
+  private _resetPosition(firstRun = false) {
     // Set the initial position of the handle.
     requestAnimationFrame(() => {
       const bounds = this.getBoundingClientRect();
-      const dimensionAxis = this.orientation === 'vertical' ? 'height' : 'width';
+      const dimensionAxis =
+        this.orientation === "vertical" ? "height" : "width";
+
+      if (firstRun) {
+        this._relativePosition = this.handleStart;
+      }
+
       this._position = bounds[dimensionAxis] * this._relativePosition;
+
       this._setPosition();
     });
   }
@@ -108,7 +114,7 @@ export default class TwoUp extends HTMLElement {
 
   set legacyClipCompat(val: boolean) {
     if (val) {
-      this.setAttribute(legacyClipCompatAttr, '');
+      this.setAttribute(legacyClipCompatAttr, "");
     } else {
       this.removeAttribute(legacyClipCompatAttr);
     }
@@ -122,12 +128,25 @@ export default class TwoUp extends HTMLElement {
 
     // This mirrors the behaviour of input.type, where setting just sets the attribute, but getting
     // returns the value only if it's valid.
-    if (value && value.toLowerCase() === 'vertical') return 'vertical';
-    return 'horizontal';
+    if (value && value.toLowerCase() === "vertical") return "vertical";
+    return "horizontal";
   }
 
   set orientation(val: TwoUpOrientation) {
     this.setAttribute(orientationAttr, val);
+  }
+
+  get handleStart() {
+    const value = this.getAttribute(handleStart);
+    if (value) {
+      return Number(value);
+    }
+
+    return 0.5;
+  }
+
+  set handleStart(val: number) {
+    this.setAttribute(handleStart, String(val));
   }
 
   /**
@@ -145,20 +164,24 @@ export default class TwoUp extends HTMLElement {
    * Called when a pointer moves.
    */
   private _pointerChange(startPoint: Pointer, currentPoint: Pointer) {
-    const pointAxis = this.orientation === 'vertical' ? 'clientY' : 'clientX';
-    const dimensionAxis = this.orientation === 'vertical' ? 'height' : 'width';
+    const pointAxis = this.orientation === "vertical" ? "clientY" : "clientX";
+    const dimensionAxis = this.orientation === "vertical" ? "height" : "width";
     const bounds = this.getBoundingClientRect();
 
-    this._position = this._positionOnPointerStart +
+    this._position =
+      this._positionOnPointerStart +
       (currentPoint[pointAxis] - startPoint[pointAxis]);
 
     // Clamp position to element bounds.
-    this._position = Math.max(0, Math.min(this._position, bounds[dimensionAxis]));
+    this._position = Math.max(
+      0,
+      Math.min(this._position, bounds[dimensionAxis])
+    );
     this._relativePosition = this._position / bounds[dimensionAxis];
     this._setPosition();
   }
 
   private _setPosition() {
-    this.style.setProperty('--split-point', `${this._position}px`);
+    this.style.setProperty("--split-point", `${this._position}px`);
   }
 }
