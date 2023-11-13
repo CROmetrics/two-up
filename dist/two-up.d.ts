@@ -13,7 +13,7 @@ export default class TwoUp extends HTMLElement {
     /**
      * The position of the split in %.
      */
-    _relativePosition: number;
+    private _relativePosition;
     /**
      * The value of _position when the pointer went down.
      */
@@ -22,6 +22,9 @@ export default class TwoUp extends HTMLElement {
      * Has connectedCallback been called yet?
      */
     private _everConnected;
+    /**
+     * Has the initial position been set yet?
+     */
     private _initialPositionSet;
     constructor();
     connectedCallback(): void;

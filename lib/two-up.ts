@@ -24,7 +24,7 @@ export default class TwoUp extends HTMLElement {
   /**
    * The position of the split in %.
    */
-  public _relativePosition = this.initialposition;
+  private _relativePosition = this.initialposition;
 
   /**
    * The value of _position when the pointer went down.
@@ -35,6 +35,9 @@ export default class TwoUp extends HTMLElement {
    */
   private _everConnected = false;
 
+  /**
+   * Has the initial position been set yet?
+   */
   private _initialPositionSet = false;
 
   constructor() {
@@ -88,12 +91,10 @@ export default class TwoUp extends HTMLElement {
 
   attributeChangedCallback(name: string) {
     if (name === orientationAttr) {
-      console.log("attribute changed", name);
       this._resetPosition();
     }
 
     if (name === initialPositionAttr) {
-      console.log("attribute changed", name);
       this._resetPosition();
     }
   }
@@ -113,12 +114,6 @@ export default class TwoUp extends HTMLElement {
         this._initialPositionSet = true;
       }
       this._position = bounds[dimensionAxis] * this._relativePosition;
-      console.log("reset position", this._position);
-      console.log("reset position relative position", this._relativePosition);
-      console.log(
-        "relative position === initial position",
-        this._relativePosition === this.initialposition
-      );
       this._setPosition();
     });
   }
@@ -157,18 +152,11 @@ export default class TwoUp extends HTMLElement {
 
   get initialposition(): number {
     const value = this.getAttribute(initialPositionAttr);
-    console.log("initial position value", value);
-    if (value === null || typeof value === "undefined") {
-      console.log("initial position value is null or undefined", value);
-      return 0.5;
-    }
-    const perc = parseFloat(value);
-    console.log("initial position perc", perc);
-    return perc;
+    if (value === null || typeof value === "undefined") return 0.5;
+    return parseFloat(value);
   }
 
   set initialposition(val: number) {
-    console.log("set initial position", val);
     this.setAttribute(initialPositionAttr, val.toString());
   }
 
@@ -205,7 +193,6 @@ export default class TwoUp extends HTMLElement {
   }
 
   private _setPosition() {
-    console.log("set position", this._position);
     this.style.setProperty("--split-point", `${this._position}px`);
   }
 }
