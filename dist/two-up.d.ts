@@ -22,6 +22,7 @@ export default class TwoUp extends HTMLElement {
      * Has connectedCallback been called yet?
      */
     private _everConnected;
+    private _initialPositionSet;
     constructor();
     connectedCallback(): void;
     attributeChangedCallback(name: string): void;

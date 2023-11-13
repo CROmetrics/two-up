@@ -59,6 +59,7 @@ class TwoUp extends HTMLElement {
          * Has connectedCallback been called yet?
          */
         this._everConnected = false;
+        this._initialPositionSet = false;
         this._handle.className = twoUpHandle;
         // Watch for children changes.
         // Note this won't fire for initial contents,
@@ -114,6 +115,11 @@ class TwoUp extends HTMLElement {
         requestAnimationFrame(() => {
             const bounds = this.getBoundingClientRect();
             const dimensionAxis = this.orientation === "vertical" ? "height" : "width";
+            if (this._relativePosition !== this.initialposition &&
+                !this._initialPositionSet) {
+                this._relativePosition = this.initialposition;
+                this._initialPositionSet = true;
+            }
             this._position = bounds[dimensionAxis] * this._relativePosition;
             console.log("reset position", this._position);
             console.log("reset position relative position", this._relativePosition);

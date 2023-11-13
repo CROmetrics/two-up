@@ -35,6 +35,8 @@ export default class TwoUp extends HTMLElement {
    */
   private _everConnected = false;
 
+  private _initialPositionSet = false;
+
   constructor() {
     super();
     this._handle.className = styles.twoUpHandle;
@@ -102,6 +104,14 @@ export default class TwoUp extends HTMLElement {
       const bounds = this.getBoundingClientRect();
       const dimensionAxis =
         this.orientation === "vertical" ? "height" : "width";
+
+      if (
+        this._relativePosition !== this.initialposition &&
+        !this._initialPositionSet
+      ) {
+        this._relativePosition = this.initialposition;
+        this._initialPositionSet = true;
+      }
       this._position = bounds[dimensionAxis] * this._relativePosition;
       console.log("reset position", this._position);
       console.log("reset position relative position", this._relativePosition);
