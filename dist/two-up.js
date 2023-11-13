@@ -235,7 +235,7 @@ var TwoUp = (function () {
             /**
              * The position of the split in %.
              */
-            this._relativePosition = 0;
+            this._relativePosition = this.initialposition;
             /**
              * The value of _position when the pointer went down.
              */

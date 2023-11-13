@@ -24,7 +24,7 @@ export default class TwoUp extends HTMLElement {
   /**
    * The position of the split in %.
    */
-  private _relativePosition = 0;
+  private _relativePosition = this.initialposition;
 
   /**
    * The value of _position when the pointer went down.
