@@ -141,6 +141,7 @@ export default class TwoUp extends HTMLElement {
 
   get initialposition(): number {
     const value = this.getAttribute(initialPositionAttr);
+    console.log("initial position value", value);
     if (value === null || typeof value === "undefined") return 0.5;
     const perc = parseFloat(value);
     if (perc === 0) return 0;
