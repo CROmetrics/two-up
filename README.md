@@ -25,7 +25,7 @@ Now the user can slide between the two.
   <div>…</div>
 </two-up>
 <script>
-  const twoUp = document.querySelector('.my-two-up');
+  const twoUp = document.querySelector(".my-two-up");
 </script>
 ```
 
@@ -73,7 +73,7 @@ See [examples on CodePen](https://codepen.io/developit/pen/qBdbNLK).
 
 ## Files
 
-* `lib/index.ts` - Original TypeScript.
-* `dist/two-up.mjs` - JS module. Default exports `TwoUp`.
-* `dist/two-up.js` - Plain JS. Exposes `TwoUp` on the global.
-* `dist/two-up-min.js` - Minified plain JS. 2.4k gzipped.
+- `lib/index.ts` - Original TypeScript.
+- `dist/two-up.mjs` - JS module. Default exports `TwoUp`.
+- `dist/two-up.js` - Plain JS. Exposes `TwoUp` on the global.
+- `dist/two-up-min.js` - Minified plain JS. 2.4k gzipped.

@@ -3,7 +3,6 @@ import * as styles from "./styles.css";
 
 const legacyClipCompatAttr = "legacy-clip-compat";
 const orientationAttr = "orientation";
-const handleStart = "handle-start-percent";
 
 type TwoUpOrientation = "horizontal" | "vertical";
 
@@ -13,7 +12,7 @@ type TwoUpOrientation = "horizontal" | "vertical";
  */
 export default class TwoUp extends HTMLElement {
   static get observedAttributes() {
-    return [orientationAttr, handleStart];
+    return [orientationAttr];
   }
 
   private readonly _handle = document.createElement("div");
@@ -24,7 +23,7 @@ export default class TwoUp extends HTMLElement {
   /**
    * The position of the split in %.
    */
-  private _relativePosition = 0.5;
+  private _relativePosition = 0.9;
   /**
    * The value of _position when the pointer went down.
    */
@@ -82,22 +81,17 @@ export default class TwoUp extends HTMLElement {
   }
 
   attributeChangedCallback(name: string) {
-    if (name === orientationAttr || name === handleStart) {
+    if (name === orientationAttr) {
       this._resetPosition();
     }
   }
 
-  private _resetPosition(firstRun = false) {
+  private _resetPosition() {
     // Set the initial position of the handle.
     requestAnimationFrame(() => {
       const bounds = this.getBoundingClientRect();
       const dimensionAxis =
         this.orientation === "vertical" ? "height" : "width";
-
-      if (firstRun) {
-        this._relativePosition = this.handleStart;
-      }
-
       this._position = bounds[dimensionAxis] * this._relativePosition;
 
       this._setPosition();
@@ -134,19 +128,6 @@ export default class TwoUp extends HTMLElement {
 
   set orientation(val: TwoUpOrientation) {
     this.setAttribute(orientationAttr, val);
-  }
-
-  get handleStart() {
-    const value = this.getAttribute(handleStart);
-    if (value) {
-      return Number(value);
-    }
-
-    return 0.5;
-  }
-
-  set handleStart(val: number) {
-    this.setAttribute(handleStart, String(val));
   }
 
   /**
