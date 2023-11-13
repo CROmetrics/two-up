@@ -251,7 +251,6 @@ var TwoUp = (function () {
                 childList: true,
             });
             // Watch for element size changes.
-            // Watch for element size changes.
             if ("ResizeObserver" in window) {
                 new ResizeObserver(() => this._resetPosition()).observe(this);
             }
@@ -280,7 +279,7 @@ var TwoUp = (function () {
             this._childrenChange();
             this._handle.innerHTML = `<div class="${scrubber}">${`<svg viewBox="0 0 27 20" fill="currentColor">${'<path d="M17 19.2l9.5-9.6L16.9 0zM9.6 0L0 9.6l9.6 9.6z"/>'}</svg>`}</div>`;
             if (!this._everConnected) {
-                this._resetPosition(true);
+                this._resetPosition();
                 this._everConnected = true;
             }
         }
@@ -289,7 +288,7 @@ var TwoUp = (function () {
                 this._resetPosition();
             }
         }
-        _resetPosition(firstRun = false) {
+        _resetPosition() {
             // Set the initial position of the handle.
             requestAnimationFrame(() => {
                 const bounds = this.getBoundingClientRect();

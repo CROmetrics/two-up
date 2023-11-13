@@ -45,7 +45,6 @@ export default class TwoUp extends HTMLElement {
     });
 
     // Watch for element size changes.
-    // Watch for element size changes.
     if ("ResizeObserver" in window) {
       new ResizeObserver(() => this._resetPosition()).observe(this);
     } else {
@@ -78,7 +77,7 @@ export default class TwoUp extends HTMLElement {
     }">${`<svg viewBox="0 0 27 20" fill="currentColor">${'<path d="M17 19.2l9.5-9.6L16.9 0zM9.6 0L0 9.6l9.6 9.6z"/>'}</svg>`}</div>`;
 
     if (!this._everConnected) {
-      this._resetPosition(true);
+      this._resetPosition();
       this._everConnected = true;
     }
   }
@@ -89,15 +88,13 @@ export default class TwoUp extends HTMLElement {
     }
   }
 
-  private _resetPosition(firstRun = false) {
+  private _resetPosition() {
     // Set the initial position of the handle.
     requestAnimationFrame(() => {
       const bounds = this.getBoundingClientRect();
       const dimensionAxis =
         this.orientation === "vertical" ? "height" : "width";
-
       this._position = bounds[dimensionAxis] * this._relativePosition;
-
       this._setPosition();
     });
   }
