@@ -219,7 +219,6 @@ var TwoUp = (function () {
 
     const legacyClipCompatAttr = "legacy-clip-compat";
     const orientationAttr = "orientation";
-    const handleStart = "handle-start-percent";
     /**
      * A split view that the user can adjust. The first child becomes
      * the left-hand side, and the second child becomes the right-hand side.
@@ -235,7 +234,7 @@ var TwoUp = (function () {
             /**
              * The position of the split in %.
              */
-            this._relativePosition = 0.5;
+            this._relativePosition = 0.9;
             /**
              * The value of _position when the pointer went down.
              */
@@ -252,8 +251,12 @@ var TwoUp = (function () {
                 childList: true,
             });
             // Watch for element size changes.
+            // Watch for element size changes.
             if ("ResizeObserver" in window) {
                 new ResizeObserver(() => this._resetPosition()).observe(this);
+            }
+            else {
+                window.addEventListener("resize", () => this._resetPosition());
             }
             // Watch for pointers on the handle.
             const pointerTracker = new PointerTracker(this._handle, {
@@ -271,7 +274,7 @@ var TwoUp = (function () {
             });
         }
         static get observedAttributes() {
-            return [orientationAttr, handleStart];
+            return [orientationAttr];
         }
         connectedCallback() {
             this._childrenChange();
@@ -282,7 +285,7 @@ var TwoUp = (function () {
             }
         }
         attributeChangedCallback(name) {
-            if (name === orientationAttr || name === handleStart) {
+            if (name === orientationAttr) {
                 this._resetPosition();
             }
         }
@@ -291,9 +294,6 @@ var TwoUp = (function () {
             requestAnimationFrame(() => {
                 const bounds = this.getBoundingClientRect();
                 const dimensionAxis = this.orientation === "vertical" ? "height" : "width";
-                if (firstRun) {
-                    this._relativePosition = this.handleStart;
-                }
                 this._position = bounds[dimensionAxis] * this._relativePosition;
                 this._setPosition();
             });
@@ -326,16 +326,6 @@ var TwoUp = (function () {
         }
         set orientation(val) {
             this.setAttribute(orientationAttr, val);
-        }
-        get handleStart() {
-            const value = this.getAttribute(handleStart);
-            if (value) {
-                return Number(value);
-            }
-            return 0.5;
-        }
-        set handleStart(val) {
-            this.setAttribute(handleStart, String(val));
         }
         /**
          * Called when element's child list changes

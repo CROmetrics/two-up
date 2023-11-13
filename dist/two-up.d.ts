@@ -35,7 +35,6 @@ export default class TwoUp extends HTMLElement {
      * Split vertically rather than horizontally.
      */
     orientation: TwoUpOrientation;
-    handleStart: number;
     /**
      * Called when element's child list changes
      */

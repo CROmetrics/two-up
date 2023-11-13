@@ -34,7 +34,6 @@ styleInject(css);
 
 const legacyClipCompatAttr = "legacy-clip-compat";
 const orientationAttr = "orientation";
-const handleStart = "handle-start-percent";
 /**
  * A split view that the user can adjust. The first child becomes
  * the left-hand side, and the second child becomes the right-hand side.
@@ -50,7 +49,7 @@ class TwoUp extends HTMLElement {
         /**
          * The position of the split in %.
          */
-        this._relativePosition = 0.5;
+        this._relativePosition = 0.9;
         /**
          * The value of _position when the pointer went down.
          */
@@ -67,8 +66,12 @@ class TwoUp extends HTMLElement {
             childList: true,
         });
         // Watch for element size changes.
+        // Watch for element size changes.
         if ("ResizeObserver" in window) {
             new ResizeObserver(() => this._resetPosition()).observe(this);
+        }
+        else {
+            window.addEventListener("resize", () => this._resetPosition());
         }
         // Watch for pointers on the handle.
         const pointerTracker = new PointerTracker(this._handle, {
@@ -86,7 +89,7 @@ class TwoUp extends HTMLElement {
         });
     }
     static get observedAttributes() {
-        return [orientationAttr, handleStart];
+        return [orientationAttr];
     }
     connectedCallback() {
         this._childrenChange();
@@ -97,7 +100,7 @@ class TwoUp extends HTMLElement {
         }
     }
     attributeChangedCallback(name) {
-        if (name === orientationAttr || name === handleStart) {
+        if (name === orientationAttr) {
             this._resetPosition();
         }
     }
@@ -106,9 +109,6 @@ class TwoUp extends HTMLElement {
         requestAnimationFrame(() => {
             const bounds = this.getBoundingClientRect();
             const dimensionAxis = this.orientation === "vertical" ? "height" : "width";
-            if (firstRun) {
-                this._relativePosition = this.handleStart;
-            }
             this._position = bounds[dimensionAxis] * this._relativePosition;
             this._setPosition();
         });
@@ -141,16 +141,6 @@ class TwoUp extends HTMLElement {
     }
     set orientation(val) {
         this.setAttribute(orientationAttr, val);
-    }
-    get handleStart() {
-        const value = this.getAttribute(handleStart);
-        if (value) {
-            return Number(value);
-        }
-        return 0.5;
-    }
-    set handleStart(val) {
-        this.setAttribute(handleStart, String(val));
     }
     /**
      * Called when element's child list changes
