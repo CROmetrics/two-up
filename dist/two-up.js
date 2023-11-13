@@ -295,6 +295,13 @@ var TwoUp = (function () {
                 const bounds = this.getBoundingClientRect();
                 const dimensionAxis = this.orientation === "vertical" ? "height" : "width";
                 this._position = bounds[dimensionAxis] * this._relativePosition;
+                console.log("reset position", this._position);
+                console.log("reset position", this._relativePosition);
+                console.assert(this._relativePosition === this.initialposition, "%o", {
+                    error: "initial position is not equal to relative position",
+                    value: this._relativePosition,
+                    initialposition: this.initialposition,
+                });
                 this._setPosition();
             });
         }
