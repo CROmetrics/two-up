@@ -64,11 +64,7 @@ export default class TwoUp extends HTMLElement {
         // We only want to track 1 pointer.
         if (pointerTracker.currentPointers.length === 1) return false;
         event.preventDefault();
-        dispatchEvent(
-          new CustomEvent("two-up-handle-grabbed", {
-            detail: { handle: this._handle },
-          })
-        );
+        window.dispatchEvent(new CustomEvent("twoUpHandleGrabbed"));
         this._positionOnPointerStart = this._position;
         return true;
       },
