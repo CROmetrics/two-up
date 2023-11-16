@@ -196,6 +196,6 @@ class TwoUp extends HTMLElement {
     }
 }
 
-customElements.define('two-up', TwoUp);
+customElements.get("two-up") || customElements.define("two-up", TwoUp);
 
 export default TwoUp;
