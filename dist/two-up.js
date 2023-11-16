@@ -285,7 +285,6 @@ var TwoUp = (function () {
     const orientationAttr = "orientation";
     const initialPositionAttr = "initial-position";
     const sendCustomEvent = () => {
-        console.log("debug");
         window.dispatchEvent(new CustomEvent("twoUpHandledGrabbed"));
     };
     /**
@@ -332,14 +331,12 @@ var TwoUp = (function () {
                     // We only want to track 1 pointer.
                     if (pointerTracker.currentPointers.length === 1)
                         return false;
-                    console.log("grabbed");
                     event.preventDefault();
                     sendCustomEvent();
                     this._positionOnPointerStart = this._position;
                     return true;
                 },
                 move: () => {
-                    console.log("moved");
                     this._pointerChange(pointerTracker.startPointers[0], pointerTracker.currentPointers[0]);
                 },
             });
