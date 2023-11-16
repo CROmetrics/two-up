@@ -8,7 +8,7 @@ const initialPositionAttr = "initial-position";
 type TwoUpOrientation = "horizontal" | "vertical";
 
 const sendCustomEvent = () => {
-  window.dispatchEvent(new CustomEvent("twoUpHandledGrabbed"));
+  window.dispatchEvent(new CustomEvent("twoUpHandleGrabbed"));
 };
 
 /**

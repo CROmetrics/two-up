@@ -285,7 +285,7 @@ var TwoUp = (function () {
     const orientationAttr = "orientation";
     const initialPositionAttr = "initial-position";
     const sendCustomEvent = () => {
-        window.dispatchEvent(new CustomEvent("twoUpHandledGrabbed"));
+        window.dispatchEvent(new CustomEvent("twoUpHandleGrabbed"));
     };
     /**
      * A split view that the user can adjust. The first child becomes
