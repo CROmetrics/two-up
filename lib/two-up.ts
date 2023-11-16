@@ -1,13 +1,13 @@
 import PointerTracker, { Pointer } from "pointer-tracker";
 import * as styles from "./styles.css";
 
-type TwoUpOrientation = "horizontal" | "vertical";
-
 const legacyClipCompatAttr = "legacy-clip-compat";
 const orientationAttr = "orientation";
 const initialPositionAttr = "initial-position";
 
-const dispatchHandleGrabbedEvent = () => {
+type TwoUpOrientation = "horizontal" | "vertical";
+
+const sendCustomEvent = () => {
   window.dispatchEvent(new CustomEvent("twoUpHandledGrabbed"));
 };
 
@@ -44,6 +44,8 @@ export default class TwoUp extends HTMLElement {
    */
   private _initialPositionSet = false;
 
+  private _resizeObserver?: ResizeObserver;
+
   constructor() {
     super();
     this._handle.className = styles.twoUpHandle;
@@ -55,20 +57,13 @@ export default class TwoUp extends HTMLElement {
       childList: true,
     });
 
-    // Watch for element size changes.
-    if ("ResizeObserver" in window) {
-      new ResizeObserver(() => this._resetPosition()).observe(this);
-    } else {
-      window.addEventListener("resize", () => this._resetPosition());
-    }
-
     // Watch for pointers on the handle.
     const pointerTracker: PointerTracker = new PointerTracker(this._handle, {
       start: (_, event) => {
         // We only want to track 1 pointer.
         if (pointerTracker.currentPointers.length === 1) return false;
         event.preventDefault();
-        dispatchHandleGrabbedEvent();
+        sendCustomEvent();
         this._positionOnPointerStart = this._position;
         return true;
       },
@@ -88,10 +83,17 @@ export default class TwoUp extends HTMLElement {
       styles.scrubber
     }">${`<svg viewBox="0 0 27 20" fill="currentColor">${'<path d="M17 19.2l9.5-9.6L16.9 0zM9.6 0L0 9.6l9.6 9.6z"/>'}</svg>`}</div>`;
 
+    this._resizeObserver = new ResizeObserver(() => this._resetPosition());
+    this._resizeObserver.observe(this);
+
     if (!this._everConnected) {
       this._resetPosition();
       this._everConnected = true;
     }
+  }
+
+  disconnectedCallback() {
+    if (this._resizeObserver) this._resizeObserver.disconnect();
   }
 
   attributeChangedCallback(name: string) {
