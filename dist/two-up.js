@@ -269,6 +269,9 @@ var TwoUp = (function () {
                     if (pointerTracker.currentPointers.length === 1)
                         return false;
                     event.preventDefault();
+                    dispatchEvent(new CustomEvent("two-up-handle-grabbed", {
+                        detail: { handle: this._handle },
+                    }));
                     this._positionOnPointerStart = this._position;
                     return true;
                 },
