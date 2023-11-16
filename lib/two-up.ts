@@ -1,11 +1,15 @@
 import PointerTracker, { Pointer } from "pointer-tracker";
 import * as styles from "./styles.css";
 
+type TwoUpOrientation = "horizontal" | "vertical";
+
 const legacyClipCompatAttr = "legacy-clip-compat";
 const orientationAttr = "orientation";
 const initialPositionAttr = "initial-position";
 
-type TwoUpOrientation = "horizontal" | "vertical";
+const dispatchHandleGrabbedEvent = () => {
+  window.dispatchEvent(new CustomEvent("twoUpHandledGrabbed"));
+};
 
 /**
  * A split view that the user can adjust. The first child becomes
@@ -64,7 +68,7 @@ export default class TwoUp extends HTMLElement {
         // We only want to track 1 pointer.
         if (pointerTracker.currentPointers.length === 1) return false;
         event.preventDefault();
-        window.dispatchEvent(new CustomEvent("twoUpHandleGrabbed"));
+        dispatchHandleGrabbedEvent();
         this._positionOnPointerStart = this._position;
         return true;
       },

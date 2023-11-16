@@ -35,6 +35,9 @@ styleInject(css);
 const legacyClipCompatAttr = "legacy-clip-compat";
 const orientationAttr = "orientation";
 const initialPositionAttr = "initial-position";
+const dispatchHandleGrabbedEvent = () => {
+    window.dispatchEvent(new CustomEvent("twoUpHandledGrabbed"));
+};
 /**
  * A split view that the user can adjust. The first child becomes
  * the left-hand side, and the second child becomes the right-hand side.
@@ -84,7 +87,7 @@ class TwoUp extends HTMLElement {
                 if (pointerTracker.currentPointers.length === 1)
                     return false;
                 event.preventDefault();
-                window.dispatchEvent(new CustomEvent("twoUpHandleGrabbed"));
+                dispatchHandleGrabbedEvent();
                 this._positionOnPointerStart = this._position;
                 return true;
             },
